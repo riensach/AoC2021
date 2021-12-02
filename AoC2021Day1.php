@@ -2003,44 +2003,44 @@ $puzzleInput = "100
 
 $time_pre = microtime(true);
 
-$inputArray = explode("\r\n",$puzzleInput);
-$prevValue = 0;
-$increases = 0;
-foreach($inputArray as $key => $value) {
-    if($key > 0 && $value > $prevValue) {
-        $increases++;
+$inputArray = explode("\n",$puzzleInput);
+$previousOceanFloorValue = 0;
+$increaseCount = 0;
+foreach($inputArray as $key => $oceanFloorValue) {
+    if($key > 0 && $oceanFloorValue > $previousOceanFloorValue) {
+        $increaseCount++;
     }
-    $prevValue = $value;
+    $previousOceanFloorValue = $oceanFloorValue;
 
 }
 
 
 
-$prevValue = new \Ds\Deque();
-$increases2 = 0;
-foreach($inputArray as $key => $value) {
+$oceanFloorValues = new \Ds\Deque();
+$increaseCountPartB = 0;
+foreach($inputArray as $key => $oceanFloorValue) {
 
-    $prevValue->push($value);
+    $oceanFloorValues->push($oceanFloorValue);
     if($key > 2) {
         // logic here
-        $firstWindow = $prevValue->get(0) + $prevValue->get(1) + $prevValue->get(2);
-        $secondWindow = $prevValue->get(1) + $prevValue->get(2) + $prevValue->get(3);
+        $firstWindow = $oceanFloorValues->get(0) + $oceanFloorValues->get(1) + $oceanFloorValues->get(2);
+        $secondWindow = $oceanFloorValues->get(1) + $oceanFloorValues->get(2) + $oceanFloorValues->get(3);
 
         if($secondWindow > $firstWindow) {
-            $increases2++;
+            $increaseCountPartB++;
         }
 
     }
 
     if($key > 2) {
-        $prevValue->shift();
+        $oceanFloorValues->shift();
     }
 
 }
 
 
-echo "Day 1 Part A: ".$increases."<br>";
-echo "Day 1 Part B: ".$increases2."<br>";
+echo "Day 1 Part A: ".$increaseCount."<br>";
+echo "Day 1 Part B: ".$increaseCountPartB."<br>";
 
 
 $time_post = microtime(true);
