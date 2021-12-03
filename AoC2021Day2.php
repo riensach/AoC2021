@@ -41,8 +41,8 @@ foreach($inputArray as $key => $value) {
 $valueA = $aim * $horizontalPosition;
 $valueB = $depth * $horizontalPosition;
 
-echo "Day 1 Part A: ".$valueA."<br>";
-echo "Day 1 Part B: ".$valueB."<br>";
+echo "Day 2 Part A: ".$valueA."<br>";
+echo "Day 2 Part B: ".$valueB."<br>";
 
 $time_post = microtime(true);
 $exec_time = $time_post - $time_pre;
