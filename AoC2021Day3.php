@@ -21,7 +21,6 @@ $inputArray = explode("\n",$puzzleInput);
 
 $gammaRate = 0;
 $epsilonRate = 0;
-
 $dataLog = array();
 
 // This section splits the input into an array that has all the first bits, all the second bits etc
@@ -41,7 +40,6 @@ $epsilonRate = '';
 foreach($dataLog as $key => $value) {
     $value0 = 0;
     $value1 = 0;
-
     // Here we identify the most popular bit per position
     foreach ($value as $key2 => $value2) {
         if($value2==0){
@@ -64,13 +62,9 @@ foreach($dataLog as $key => $value) {
 
 $trueGamma = bindec($gammaRate);
 $trueEpsilon = bindec($epsilonRate);
+$powerConsumption = $trueGamma * $trueEpsilon;
 
-$valueA = $trueGamma * $trueEpsilon;
-
-echo "Day 3 Part A: ".$valueA."<br>";
-
-
-
+echo "Day 3 Part A: ".$powerConsumption."<br>";
 
 $oxygenInputArray = $inputArray;
 $inputCheckPosition = 0; // Setting the variable to be used to identify why position we're evaluating
@@ -100,11 +94,6 @@ while(count($oxygenInputArray) > 1) {
         }
     }
     $inputCheckPosition++;
-
-//    This code wasn't needed in the end!
-//    if($inputCheckPosition>=strlen(current($oxygenInputArray))) {
-//        $inputCheckPosition = 0;
-//    }
 
 }
 
