@@ -1,28 +1,28 @@
 <?php
 
 $time_pre = microtime(true);
-$fileName = substr(basename(__FILE__, '.php'),-4);
+$fileName = substr(basename(__FILE__, '.php'),-5);
 $puzzleInput = require 'input/'.$fileName.'.php';
 
-$puzzleInput = "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
-
-22 13 17 11  0
- 8  2 23  4 24
-21  9 14 16  7
- 6 10  3 18  5
- 1 12 20 15 19
-
- 3 15  0  2 22
- 9 18 13 17  5
-19  8  7 25 23
-20 11 10 24  4
-14 21 16 12  6
-
-14 21 17 24  4
-10 16 15  9 19
-18  8 23 26 20
-22 11 13  6  5
- 2  0 12  3  7";
+//$puzzleInput = "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
+//
+//22 13 17 11  0
+// 8  2 23  4 24
+//21  9 14 16  7
+// 6 10  3 18  5
+// 1 12 20 15 19
+//
+// 3 15  0  2 22
+// 9 18 13 17  5
+//19  8  7 25 23
+//20 11 10 24  4
+//14 21 16 12  6
+//
+//14 21 17 24  4
+//10 16 15  9 19
+//18  8 23 26 20
+//22 11 13  6  5
+// 2  0 12  3  7";
 
 $inputArray = explode("\n",$puzzleInput);
 
@@ -78,6 +78,7 @@ function markNumbers($numberToMark, $boards) {
 }
 
 function checkBoards($boards) {
+    $keys = array();
     foreach($boards as $key => $line) {
         $columnCount[0] = 0;
         $columnCount[1] = 0;
@@ -88,22 +89,22 @@ function checkBoards($boards) {
             $rowCount = 0;
             foreach($column as $key3 => $value) {
                 if($value == "X") {
-                    $columnCount[$key2]++;
+                    $columnCount[$key3]++;
                     $rowCount++;
                 }
             }
             if($rowCount > 4) {
                 // Found a winning row
-                return $key;
+                $keys[] = $key;
             }
 
         }
         if($columnCount[0] > 4 || $columnCount[1] > 4 || $columnCount[2] > 4 || $columnCount[3] > 4 || $columnCount[4] > 4) {
             // Found a winning column
-            return $key;
+            $keys[] = $key;
         }
     }
-    return -1;
+    return $keys;
 }
 
 
@@ -126,29 +127,39 @@ function winningBoardUnmarkedSum($winnerBoardID, $boards) {
 
 
 $winnerFound = 0;
-$winnerBoardID = -1;
 $lastNumber = 0;
+$winnerBoardID = array();
 
 foreach($winningNumbers as $key => $winningNumber) {
 
     $lastNumber = $winningNumber;
     $boards = markNumbers($winningNumber, $boards);
     $winnerBoardID = checkBoards($boards);
-    echo "Checking number $winningNumber - found winner? $winnerBoardID<br>";
-
-    if($winnerBoardID > -1) {
-        break;
+    $boardCount = count($boards);
+    $winnerBoardCount = count($winnerBoardID);
+    echo "Checking number $winningNumber - found winner? $winnerBoardCount - $boardCount<br>";
+    if(count($winnerBoardID) > 0) {
+        if(count($boards)>1) {
+            foreach($winnerBoardID as $key => $value) {
+                unset($boards[$value]);
+            }
+        } else {
+            $winnerBoardID = array_key_first($boards);
+            echo $winnerBoardID;
+            break;
+        }
+      //  break;
     }
+
 
 }
 
 //var_dump($boards);
-
 $calculateSolution = winningBoardUnmarkedSum($winnerBoardID, $boards) * $lastNumber;
 
 
 echo "Day 4 Part A: ".$calculateSolution."<br>";
-echo "Day 4 Part B: ".$lifeSupportRating."<br>";
+//echo "Day 4 Part B: ".$lifeSupportRating."<br>";
 
 
 
