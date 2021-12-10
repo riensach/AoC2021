@@ -49,7 +49,7 @@ foreach($inputArray as $key => $value) {
                 $pointsToAdd = $points[$nextValue];
                 $pointsTotal += $pointsToAdd;
 
-                echo "Found an unexpected $nextValue (expected $lastValue ), adding $pointsToAdd to $pointsTotal<br>";
+                //echo "Found an unexpected $nextValue (expected $lastValue ), adding $pointsToAdd to $pointsTotal<br>";
                 // This is a corrupted line
                 $corrupted = 1;
                 break;
