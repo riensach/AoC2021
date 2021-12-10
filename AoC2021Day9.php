@@ -13,9 +13,7 @@ $puzzleInput = require 'input/'.$fileName.'.php';
 $inputArray = explode("\n",$puzzleInput);
 
 $gridArray = array();
-
 $gridSize = 100;
-
 for ($x = 0; $x < $gridSize; $x++) {
     for ($y = 0; $y < $gridSize; $y++) {
         $gridArray[$x][$y] = '100';
