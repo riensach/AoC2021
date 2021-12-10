@@ -17,15 +17,10 @@ $puzzleInput = require 'input/'.$fileName.'.php';
 
 $inputArray = explode("\n",$puzzleInput);
 
-// ) = 3 points
-// ] = 57 points
-// } 1197 points
-// > 25137 points
-
 $pointsTotal = 0;
 $pairs = array('{' => '}', '[' => ']', '(' => ')', '<' => '>');
-$points = array('}' => 1197, ']' => 57, ')' => 3, '>' => 25137);
-$pointsB = array('}' => 3, ']' => 2, ')' => 1, '>' => 4);
+$points = array(')' => 3, ']' => 57, '}' => 1197, '>' => 25137);
+$pointsB = array(')' => 1, ']' => 2, '}' => 3,  '>' => 4);
 
 $partBScores = array();
 foreach($inputArray as $key => $value) {
@@ -61,7 +56,6 @@ foreach($inputArray as $key => $value) {
 
         $incompleteLines[] = $values;
         $order = array_reverse($order);
-
         $pointsSecond = 0;
 
         foreach($order as $key2 => $nextValue) {
