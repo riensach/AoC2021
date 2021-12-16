@@ -1,19 +1,19 @@
 <?php
 
 $time_pre = microtime(true);
-$fileName = substr(basename(__FILE__, '.php'),-5);
+$fileName = substr(basename(__FILE__, '.php'),-6);
 $puzzleInput = require 'input/'.$fileName.'.php';
 
-$puzzleInput = "1163751742
-1381373672
-2136511328
-3694931569
-7463417111
-1319128137
-1359912421
-3125421639
-1293138521
-2311944581";
+//$puzzleInput = "1163751742
+//1381373672
+//2136511328
+//3694931569
+//7463417111
+//1319128137
+//1359912421
+//3125421639
+//1293138521
+//2311944581";
 
 $inputArray = explode("\n",$puzzleInput);
 
@@ -27,8 +27,28 @@ foreach($inputArray as $key => $value) {
     foreach($strSplit as $key2 => $value2) {
         $gridArray[$key][$key2] = $value2;
     }
-
 }
+
+$height = array_key_last($gridArray);
+$width = array_key_last($gridArray[1]);
+
+foreach($gridArray as $key => $value) {
+    for($x = 1; $x < 5; $x++) {
+        foreach($value as $key2 => $value2) {
+            $gridArray[$key][$key2+(($width+1)*$x)] = $value2+$x > 9 ? $value2+$x-9:$value2+$x;
+        }
+    }
+}
+
+foreach($gridArray as $key => $value) {
+    for($x = 1; $x < 5; $x++) {
+        foreach($value as $key2 => $value2) {
+            $gridArray[$key+(($height+1)*$x)][$key2] = $value2+$x > 9 ? $value2+$x-9:$value2+$x;
+        }
+    }
+}
+
+ksort($gridArray);
 
 $height = array_key_last($gridArray);
 $width = array_key_last($gridArray[1]);
@@ -48,7 +68,7 @@ function attemptPath($currentPosition, $finalDestination, $previousPosition, &$g
 //        // This path won't work for us, end it
 //        return;
 //    }
-    if((isset($records[0]['totalRisk']) && $risk > $records[0]['totalRisk']) || $risk > 1000) {
+    if((isset($records[0]['totalRisk']) && $risk > $records[0]['totalRisk']) || $risk > 2914) {
         // Risk is already too high, leave it
         return;
     }
@@ -79,13 +99,6 @@ function attemptPath($currentPosition, $finalDestination, $previousPosition, &$g
     }
 
     $previousCoordsArray[$currentPosition] = $risk;
-    if(!is_null($positionAbove) && $positionAboveCoord <> $previousPositionCoord && $positionAbove > 0) {
-        // Continue with this path!
-        //echo "Pathing option above from $previousPosition to $positionAboveCoord, attempting to move there.<br>";
-        $newRisk = $risk + $positionAbove;
-        //$gridArray[$currentPositionCoord[0]-1][$currentPositionCoord[1]] = -1;
-        attemptPath($positionAboveCoord,$finalDestination,$currentPosition,$gridArray,$moves+1,$newRisk,$records, $previousCoordsArray);
-    }
 
     if(!is_null($positionBelow) && $positionBelowCoord <> $previousPositionCoord && $positionBelow > 0) {
         // Continue with this path!
@@ -111,6 +124,17 @@ function attemptPath($currentPosition, $finalDestination, $previousPosition, &$g
         //$gridArray[$currentPositionCoord[0]][$currentPositionCoord[1]+1] = -1;
         attemptPath($positionRightCoord,$finalDestination,$currentPosition,$gridArray,$moves+1,$newRisk,$records, $previousCoordsArray);
     }
+
+
+    if(!is_null($positionAbove) && $positionAboveCoord <> $previousPositionCoord && $positionAbove > 0) {
+        // Continue with this path!
+        //echo "Pathing option above from $previousPosition to $positionAboveCoord, attempting to move there.<br>";
+        $newRisk = $risk + $positionAbove;
+        //$gridArray[$currentPositionCoord[0]-1][$currentPositionCoord[1]] = -1;
+        attemptPath($positionAboveCoord,$finalDestination,$currentPosition,$gridArray,$moves+1,$newRisk,$records, $previousCoordsArray);
+    }
+
+
 
     return;
 
