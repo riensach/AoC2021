@@ -1,13 +1,13 @@
 <?php
 
 $time_pre = microtime(true);
-$fileName = substr(basename(__FILE__, '.php'),-5);
+$fileName = substr(basename(__FILE__, '.php'),-6);
 $puzzleInput = require 'input/'.$fileName.'.php';
 
 //$puzzleInput = "620080001611562C8802118E34";
 //$puzzleInput = "EE00D40C823060";
 //$puzzleInput = "A0016C880162017C3686B18A3D4780";
-//$puzzleInput = "D2FE28";
+$puzzleInput = "9C0141080250320F1802104A08";
 
 $inputArray = str_split($puzzleInput, 1);
 

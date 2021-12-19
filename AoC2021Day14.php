@@ -4,24 +4,24 @@ $time_pre = microtime(true);
 $fileName = substr(basename(__FILE__, '.php'),-5);
 $puzzleInput = require 'input/'.$fileName.'.php';
 
-//$puzzleInput = "NNCB
-//
-//CH -> B
-//HH -> N
-//CB -> H
-//NH -> C
-//HB -> C
-//HC -> B
-//HN -> C
-//NN -> C
-//BH -> H
-//NC -> B
-//NB -> B
-//BN -> B
-//BB -> N
-//BC -> B
-//CC -> N
-//CN -> C";
+$puzzleInput = "NNCB
+
+CH -> B
+HH -> N
+CB -> H
+NH -> C
+HB -> C
+HC -> B
+HN -> C
+NN -> C
+BH -> H
+NC -> B
+NB -> B
+BN -> B
+BB -> N
+BC -> B
+CC -> N
+CN -> C";
 
 $inputArray = explode("\n",$puzzleInput);
 
@@ -39,7 +39,7 @@ foreach($inputArray as $key => $value) {
     }
 }
 
-$steps = 40;
+$steps = 10;
 
 for ($x = 0; $x < $steps; $x++) {
 
@@ -54,7 +54,7 @@ for ($x = 0; $x < $steps; $x++) {
     }
 
     $polymer = $tempPolymer;
-
+    //echo $polymer."<br>";
     $time_post = microtime(true);
     $exec_time = $time_post - $time_pre;
     echo "Completed step $x in $exec_time seconds<br>";
