@@ -139,7 +139,7 @@ $versionNumbers = array_sum($versionArray);
 
 
 
-echo "Day 15 Part A: Summary of version numbers ".$versionNumbers."<br><br>";
+echo "Day 16 Part A: Summary of version numbers ".$versionNumbers."<br><br>";
 
 
 $time_post = microtime(true);

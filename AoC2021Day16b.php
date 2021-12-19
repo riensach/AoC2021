@@ -7,7 +7,7 @@ $puzzleInput = require 'input/'.$fileName.'.php';
 //$puzzleInput = "620080001611562C8802118E34";
 //$puzzleInput = "EE00D40C823060";
 //$puzzleInput = "A0016C880162017C3686B18A3D4780";
-$puzzleInput = "9C0141080250320F1802104A08";
+//$puzzleInput = "CE00C43D881120";
 
 $inputArray = str_split($puzzleInput, 1);
 
@@ -28,119 +28,80 @@ $translationArray = array(0 => '0000',
 'E' => '1110',
 'F' => '1111');
 
-var_dump($translationArray);
-
 $binaryMessage = '';
 
 foreach($inputArray as $key => $value) {
     $binaryValue = $translationArray[$value];
     $binaryMessage .= $binaryValue;
-    //echo "$value - $binaryValue - $binaryMessage<br>";
 }
-echo $binaryMessage;
-echo "<br>";
-$binaryMessage = rtrim($binaryMessage,'0');
-echo $binaryMessage;
-echo "<br>";
 
-//$version = substr($binaryMessage, 0, 3);
-//$typeID = substr($binaryMessage, 3, 3);
-//echo "<br>";
-//echo "$version - $typeID<br>";
-//$version = bindec($version);
-//$typeID = bindec($typeID);
-//echo "$version - $typeID<br>";
-
+function iterateBits (&$binaryMessage, &$strPos, &$versionArray) {
+    $version = bindec(substr($binaryMessage, $strPos, 3));
+    $typeID = bindec(substr($binaryMessage, $strPos+3, 3));
+    $strPos = $strPos + 6;
+    if($typeID == 4) {
+        $currentStrValue = substr($binaryMessage, $strPos, 1);
+        $packetValue = '';
+        $finishedLiteralLoop = 0;
+        while($finishedLiteralLoop < 1) {
+            if($currentStrValue == 0) {
+                $finishedLiteralLoop = 1;
+            }
+            $strPos++;
+            $getPacketValue = substr($binaryMessage, $strPos, 4);
+            $packetValue .= $getPacketValue;
+            $strPos = $strPos + 4;
+            $currentStrValue = substr($binaryMessage, $strPos, 1);
+        }
+        $valueNumeric = bindec($packetValue);
+        $versionArray[] = $version;
+        return $valueNumeric;
+    } else {
+        $lengthTypeID = bindec(substr($binaryMessage, $strPos, 1));
+        $strPos++;
+        if($lengthTypeID == 1) {
+            $subpacketCount = bindec(substr($binaryMessage, $strPos, 11));
+            $strPos = $strPos + 11 ;
+            for($x = 0; $x < $subpacketCount; $x++) {
+                $values[] = iterateBits($binaryMessage, $strPos, $versionArray);
+            }
+            $versionArray[] = $version;
+        } else {
+            $subpacketLength = bindec(substr($binaryMessage, $strPos, 15));
+            $strPos = $strPos + 15;
+            $endSubPacketLength = $strPos + $subpacketLength;
+            for($x = 0; $x < $endSubPacketLength; $x++) {
+                $values[] = iterateBits($binaryMessage, $strPos, $versionArray);
+                $x = $strPos;
+            }
+            $versionArray[] = $version;
+        }
+        if($typeID == 0) {
+            return array_sum($values);
+        } elseif($typeID == 1) {
+            return array_product($values);
+        } elseif($typeID == 2) {
+            return min($values);
+        } elseif($typeID == 3) {
+            return max($values);
+        } elseif($typeID == 5) {
+            return $values[0] > $values[1] ? 1:0;
+        } elseif($typeID == 6) {
+            return $values[1] > $values[0] ? 1:0;
+        } elseif($typeID == 7) {
+            return $values[1] == $values[0] ? 1:0;
+        }
+    }
+}
 
 $strPos = 0;
-$finished = 0;
 $versionArray = array();
-$strLength = strlen($binaryMessage);
 
-function iterateBits (&$binaryMessage, $strPos, $strLength, &$versionArray) {
-        $version = bindec(substr($binaryMessage, $strPos, 3));
-        echo "Verions: $version<br>";
-        $versionArray[] = $version;
-        $typeID = bindec(substr($binaryMessage, $strPos+3, 3));
-        $strPos = $strPos + 6;
-        if($typeID == 4) {
-            echo "Literal value<br>";
-            $currentStrValue = substr($binaryMessage, $strPos, 1);
-            $packetValue = '';
-            $finishedLiteralLoop = 0;
-            while($finishedLiteralLoop < 1) {
-                if($currentStrValue == 0) {
-                    $finishedLiteralLoop = 1;
-                }
-                $strPos++;
-                $getPacketValue = substr($binaryMessage, $strPos, 4);
-                $packetValue .= $getPacketValue;
-                $strPos = $strPos + 4;
-                //echo "$getPacketValue<br>";
-                $currentStrValue = substr($binaryMessage, $strPos, 1);
-            }
-            //$currentStrValue = substr($binaryMessage, $strPos, 1);
-//            while($currentStrValue == 0 && $strPos < strlen($binaryMessage)) {
-//                $strPos++;
-//                $currentStrValue = substr($binaryMessage, $strPos, 1);
-//                echo "stuck here<Br>";
-//            }
-            $valueNumeric = bindec($packetValue);
-            echo "Literal value: $packetValue - $valueNumeric - $strPos<br>";
-        } else {
-            echo "Operator<br>";
-            $lengthTypeID = bindec(substr($binaryMessage, $strPos, 1));
-            $strPos++;
-            if($lengthTypeID == 1) {
-                echo "Sub Packets 1: <br>";
-                $subpacketCount = bindec(substr($binaryMessage, $strPos, 11));
-                echo "Current position of $strPos - ";
-                //$strPos = $strPos + 11 + (11*$subpacketCount);
-                $strPos = $strPos + 11 ;
-                //echo "Found $subpacketCount more packets. Skipping to strPos $strPos<br>";
-                for($x = 0; $x < $subpacketCount; $x++) {
-                    echo "<br>Looping sub-packets, total found of $subpacketCount<br>";
-                    $strPos = iterateBits($binaryMessage, $strPos, $strLength, $versionArray);
-                    //$strPos--;
-                    //echo "String Position After: $strPos - <br>";
-                }
-                // Need to actually read the subpacket data - recursion required
-
-            } else {
-                echo "Sub Packets 2: <br>";
-                $subpacketLength = bindec(substr($binaryMessage, $strPos, 15));
-                $subpackets = substr($binaryMessage, $strPos+15, $subpacketLength);
-                //echo "Current position of $strPos - $lengthTypeID - ";
-                //$strPos = $strPos + 15 + $subpacketLength;
-                $strPos = $strPos + 15;
-                $endSubPacketLength = $strPos + $subpacketLength;
-                for($x = 0; $x < $endSubPacketLength; $x++) {
-                    $strPos = iterateBits($binaryMessage, $strPos, $strLength, $versionArray);
-                    $x = $strPos;
-                }
-                //echo "Found $subpacketLength more packet bits. Skipping to strPos $strPos<br>";
-            }
-
-        }
-        return $strPos;
-
-}
-
-
-iterateBits ($binaryMessage, $strPos, $strLength, $versionArray);
-
-
-var_dump($versionArray);
+$finalValue = iterateBits ($binaryMessage, $strPos,$versionArray);
 $versionNumbers = array_sum($versionArray);
 
-
-
-
-
-
-
 echo "Day 15 Part A: Summary of version numbers ".$versionNumbers."<br><br>";
-
+echo "Day 16 Part B: Complete evaluation ".$finalValue."<br><br>";
 
 $time_post = microtime(true);
 $exec_time = $time_post - $time_pre;
