@@ -1,0 +1,1 @@
+<?php return "target area: x=209..238, y=-86..-59";
