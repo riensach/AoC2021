@@ -6,7 +6,7 @@ $puzzleInput = require 'input/'.$fileName.'.php';
 
 $puzzleInput = "D2FE28";
 
-$inputArray = str_split($puzzleInput, 1);
+$inputArray = explode("\n",$puzzleInput);
 
 
 foreach($inputArray as $key => $value) {

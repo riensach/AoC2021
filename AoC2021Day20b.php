@@ -1,7 +1,7 @@
 <?php
 
 $time_pre = microtime(true);
-$fileName = substr(basename(__FILE__, '.php'),-5);
+$fileName = substr(basename(__FILE__, '.php'),-6);
 $puzzleInput = require 'input/'.$fileName.'.php';
 
 //$puzzleInput = "..#.#..#####.#.#.#.###.##.....###.##.#..###.####..#####..#....#..#..##..###..######.###...####..#..#####..##..#.#####...##.#.#..#.##..#.#......#.###.######.###.####...#.##.##..#..#..#####.....#.#....###..#.##......#.....#..#..#..##..#...##.######.####.####.#.#...#.......#..#.#.#...####.##.#......#..#...##.#.##..#...##.#.##..###.#......#.#.......#.#.#.####.###.##...#.....####.#..#..#.##.#....##..#.####....##...##..#...#......#.#.......#.......##..####..#...#.#.#...##..#.#..###..#####........#..####......#..#
@@ -16,10 +16,10 @@ $inputArray = explode("\n",$puzzleInput);
 $infoArray = array();
 
 $infoArray = array();
-$gridMinWidth = -10;
-$gridMinLength = -10;
-$gridMaxWidth = 110;
-$gridMaxLength = 110;
+$gridMinWidth = -60;
+$gridMinLength = -60;
+$gridMaxWidth = 200;
+$gridMaxLength = 200;
 for ($x = $gridMinWidth; $x <= $gridMaxWidth; $x++) {
     for ($y = $gridMinLength; $y <= $gridMaxLength; $y++) {
         $infoArray[$x][$y] = '.';
@@ -54,7 +54,7 @@ function printGrid($trackGridInputArray) {
 
 printGrid($infoArray);
 
-$maxSteps = 2;
+$maxSteps = 50;
 for ($x = 0; $x < $maxSteps; $x++) {
     $tempArray = $infoArray;
 
@@ -83,22 +83,31 @@ for ($x = 0; $x < $maxSteps; $x++) {
             //echo "New string value: $getStringValue<br>";
             $tempArray[$key][$key2] = $getStringValue;
 
+            if($key==$gridMinWidth && $x % 2 == 1) {
+                $tempArray[$key][$key2] = '.';
+            }
+            if($key2==$gridMaxLength && $x % 2 == 1) {
+                $tempArray[$key][$key2] = '.';
+            }
+            if($key2==$gridMinWidth && $key==$gridMaxLength && $x % 2 == 1) {
+                $tempArray[$key][$key2] = '.';
+            }
         }
     }
 
 
     $infoArray = $tempArray;
-    echo "<br><Br>";
-    printGrid($infoArray);
+    //echo "<br><Br>";
+    //printGrid($infoArray);
 }
 
 foreach($infoArray as $key => $value) {
     foreach ($value as $key2 => $value2) {
-        if($key==-10) {
-            $infoArray[$key][$key2] = '.';
+        if($key==-60) {
+           // $infoArray[$key][$key2] = '.';
         }
-        if($key2==110) {
-            $infoArray[$key][$key2] = '.';
+        if($key2==200) {
+            //$infoArray[$key][$key2] = '.';
         }
     }
 }
