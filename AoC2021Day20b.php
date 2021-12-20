@@ -52,9 +52,10 @@ function printGrid($trackGridInputArray) {
     echo "</code>";
 }
 
-printGrid($infoArray);
+//printGrid($infoArray);
 
 $maxSteps = 50;
+$lightPixelsPartA = 0;
 for ($x = 0; $x < $maxSteps; $x++) {
     $tempArray = $infoArray;
 
@@ -72,16 +73,9 @@ for ($x = 0; $x < $maxSteps; $x++) {
             $stringValue9 = $infoArray[$key+1][$key2+1] ?? '.';
 
             $string = $stringValue1.$stringValue2.$stringValue3.$stringValue4.$stringValue5.$stringValue6.$stringValue7.$stringValue8.$stringValue9;
-            //echo "String value: $string<br>";
 
-            $binString = str_replace( '.', 0, $string);
-            $binString = str_replace( '#', 1, $binString);
-            //echo "Decimal seed value: $binString<br>";
-            $binString = bindec($binString);
-            //echo "Decimal value: $binString<br>";
-            $getStringValue = $imageAlgorithm[$binString];
-            //echo "New string value: $getStringValue<br>";
-            $tempArray[$key][$key2] = $getStringValue;
+            $binString = bindec(str_replace( ['.', '#'], [0, 1], $string));
+            $tempArray[$key][$key2] = $imageAlgorithm[$binString];
 
             if($key==$gridMinWidth && $x % 2 == 1) {
                 $tempArray[$key][$key2] = '.';
@@ -94,39 +88,33 @@ for ($x = 0; $x < $maxSteps; $x++) {
             }
         }
     }
-
-
     $infoArray = $tempArray;
-    //echo "<br><Br>";
-    //printGrid($infoArray);
-}
-
-foreach($infoArray as $key => $value) {
-    foreach ($value as $key2 => $value2) {
-        if($key==-60) {
-           // $infoArray[$key][$key2] = '.';
-        }
-        if($key2==200) {
-            //$infoArray[$key][$key2] = '.';
+    if($x == 1) {
+        foreach ($infoArray as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                if ($value2 == '#') {
+                    $lightPixelsPartA++;
+                }
+            }
         }
     }
+    $infoArray = $tempArray;
 }
 
-echo "<br><Br>";
-printGrid($infoArray);
 
+//printGrid($infoArray);
 
-$lightPixels = 0;
+$lightPixelsPartB = 0;
 foreach($infoArray as $key => $value) {
     foreach($value as $key2 => $value2) {
         if($value2 == '#') {
-            $lightPixels++;
+            $lightPixelsPartB++;
         }
     }
 }
 
-
-echo "Day 20 Part A: Total lit pixels ".$lightPixels."<br><br>";
+echo "Day 20 Part A: Total lit pixels ".$lightPixelsPartA."<br><br>\n";
+echo "Day 20 Part B: Total lit pixels ".$lightPixelsPartB."<br><br>\n";
 
 
 $time_post = microtime(true);
