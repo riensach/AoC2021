@@ -26,7 +26,6 @@ for ($x = $gridMinWidth; $x <= $gridMaxWidth; $x++) {
     }
 }
 
-
 foreach($inputArray as $key => $value) {
 
     if($key==0) {
@@ -38,7 +37,6 @@ foreach($inputArray as $key => $value) {
         }
     }
 }
-
 
 function printGrid($trackGridInputArray) {
     echo "<code>";
